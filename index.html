@@ -23,50 +23,32 @@
     <div id="mensagem"></div>
 </div>
 
+
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIPDqYfB973GTOCtu4feFIFlN1rXuFRTlri31h6j4TJwzrOuEYX4OvUtKzsBvwiD3z/exec";
+  const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxCm-iiJYTR4UWkiQlqKCsRf7R2j8BpKeQWdpe5n8VutA8CFlIlkpwSUr3JIK-pewU0/exec"; // Coloque a URL do "exec" aqui
 
-    function logar() {
-        const user = document.getElementById('user').value;
-        const pass = document.getElementById('pass').value;
-        const btn = document.getElementById('btnEntrar');
-        const msg = document.getElementById('mensagem');
+  async function logar() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
 
-        if(!user || !pass) {
-            alert("Preencha todos os campos!");
-            return;
-        }
+    try {
+      // Monta a URL e faz a chamada
+      const response = await fetch(`${URL_PLANILHA}?user=${user}&pass=${pass}`);
+      const dados = await response.json();
 
-        btn.disabled = true;
-        msg.innerText = "Verificando...";
-        msg.style.color = "black";
-
-        // Monta a URL com os parâmetros
-        const finalUrl = `${SCRIPT_URL}?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
-
-        fetch(finalUrl)
-            .then(res => res.text())
-            .then(status => {
-                // Remove espaços extras do retorno do Google
-                const resultado = status.trim();
-
-                if (resultado === "ACESSO_PERMITIDO") {
-                    msg.innerText = "Login realizado!";
-                    msg.style.color = "green";
-                    // Redirecione aqui: window.location.href = "home.html";
-                } else {
-                    msg.innerText = "Usuário ou senha incorretos.";
-                    msg.style.color = "red";
-                    btn.disabled = false;
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                msg.innerText = "Erro ao conectar ao servidor.";
-                btn.disabled = false;
-            });
+      if (dados.result === "ACESSO_PERMITIDO") {
+        alert("Login Sucesso!");
+        // window.location.href = "sucesso.html";
+      } else {
+        alert("Usuário ou senha incorretos.");
+      }
+    } catch (erro) {
+      console.error("Erro na conexão:", erro);
+      alert("Erro ao conectar com a planilha. Verifique se ela está pública.");
     }
+  }
 </script>
+
 
 </body>
 </html>
