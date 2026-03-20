@@ -3,170 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Estoque | Login</title>
-    <!-- Bootstrap 5.3 e Google Fonts -->
-    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    
+    <title>Login</title>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-        }
-        .login-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 400px;
-            transition: transform 0.3s ease;
-        }
-        .login-card:hover {
-            transform: translateY(-5px);
-        }
-        .brand-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #4e54c8;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        .form-label {
-            font-weight: 600;
-            color: #4a5568;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .form-control {
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            border: 2px solid #edf2f7;
-            transition: all 0.3s;
-        }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: none;
-        }
-        .btn-login {
-            background: #4e54c8;
-            border: none;
-            border-radius: 10px;
-            padding: 0.8rem;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-top: 1rem;
-            transition: all 0.3s;
-        }
-        .btn-login:hover {
-            background: #3b41a8;
-            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
-        }
-        #mensagemErro {
-            background: #fff5f5;
-            color: #c53030;
-            padding: 0.75rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            display: none;
-            margin-bottom: 1rem;
-            border: 1px solid #feb2b2;
-        }
-        .loader {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #FFF;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-            margin-right: 10px;
-        }
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .login-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background: #ccc; }
+        #mensagem { text-align: center; margin-top: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="login-card">
-    <div class="brand-logo text-center">📦 SCEF - Sistema de Controle e Estoque Farmacêutico</div>
-    <p class="text-center text-muted mb-4 small">Bem-vindo! Identifique-se para acessar.</p>
-
-    <div id="mensagemErro"></div>
-
-    <div class="mb-3">
-        <label class="form-label">Usuário</label>
-        <input type="text" id="usuario" class="form-control" placeholder="Seu usuário">
-    </div>
-
-    <div class="mb-4">
-        <label class="form-label">Senha</label>
-        <input type="password" id="senha" class="form-control" placeholder="••••••••">
-    </div>
-
-    <button onclick="validarLogin()" id="btnAcessar" class="btn btn-primary w-100 btn-login">
-        <span id="spinner" class="loader" style="display: none;"></span>
-        ACESSAR SISTEMA
-    </button>
+    <h2>Entrar</h2>
+    <input type="text" id="user" placeholder="Usuário">
+    <input type="password" id="pass" placeholder="Senha">
+    <button onclick="logar()" id="btnEntrar">Login</button>
+    <div id="mensagem"></div>
 </div>
 
 <script>
-    async function validarLogin() {
-        const u = document.getElementById('usuario').value;
-        const s = document.getElementById('senha').value;
-        const msg = document.getElementById('mensagemErro');
-        const btn = document.getElementById('btnAcessar');
-        const spinner = document.getElementById('spinner');
+    const SCRIPT_URL = "COLE_AQUI_SUA_URL_DO_GOOGLE_SCRIPT";
 
-        if (!u || !s) {
-            msg.innerText = "⚠️ Preencha todos os campos!";
-            msg.style.display = "block";
+    function logar() {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        const btn = document.getElementById('btnEntrar');
+        const msg = document.getElementById('mensagem');
+
+        if(!user || !pass) {
+            alert("Preencha todos os campos!");
             return;
         }
 
-        // Configuração visual do carregamento
         btn.disabled = true;
-        spinner.style.display = "inline-block";
-        msg.style.display = "none";
+        msg.innerText = "Verificando...";
+        msg.style.color = "black";
 
-        // SUA URL ATUALIZADA
-        const G_SCRIPT = "https://script.google.com/macros/s/AKfycbyPnSQzNO9T3eRdxdTP78idos1qt1OJszLJEf383481sBCagR2vZpWRDJj-q4ZEwsyM/exec";
-        
-        try {
-            const response = await fetch(`${G_SCRIPT}?user=${encodeURIComponent(u)}&pass=${encodeURIComponent(s)}`);
-            const resultado = await response.text();
+        // Monta a URL com os parâmetros
+        const finalUrl = `${SCRIPT_URL}?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
 
-            if (resultado.trim().includes("ACESSO_PERMITIDO")) {
-                // SUCESSO!
-                document.body.innerHTML = `
-                    <div class="login-card text-center animate__animated animate__fadeIn">
-                        <h2 class="text-success fw-bold">🔓 Acesso Liberado</h2>
-                        <p class="text-muted mt-3">Bem-vindo, <b>${u}</b>!</p>
-                        <hr>
-                        <p>Redirecionando para o painel de estoque...</p>
-                    </div>`;
-            } else {
-                msg.innerText = "❌ Usuário ou senha incorretos.";
-                msg.style.display = "block";
-                document.getElementById('senha').value = "";
-            }
-        } catch (error) {
-            msg.innerText = "🚨 Erro de conexão com o servidor.";
-            msg.style.display = "block";
-        } finally {
-            btn.disabled = false;
-            spinner.style.display = "none";
-        }
+        fetch(finalUrl)
+            .then(res => res.text())
+            .then(status => {
+                // Remove espaços extras do retorno do Google
+                const resultado = status.trim();
+
+                if (resultado === "ACESSO_PERMITIDO") {
+                    msg.innerText = "Login realizado!";
+                    msg.style.color = "green";
+                    // Redirecione aqui: window.location.href = "home.html";
+                } else {
+                    msg.innerText = "Usuário ou senha incorretos.";
+                    msg.style.color = "red";
+                    btn.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                msg.innerText = "Erro ao conectar ao servidor.";
+                btn.disabled = false;
+            });
     }
 </script>
 
